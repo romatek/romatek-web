@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - Romatek</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .contenido-contacto {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 40px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        .contenido-contacto h2 {
+            color: #58a6ff;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            border-left: none;
+        }
+        .contenido-contacto p {
+            color: #8b949e;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        .caja-opciones-rapidas {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            justify-content: center;
+        }
+        .btn-contacto-directo {
+            background-color: #238636;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.2s, transform 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .btn-contacto-directo:hover {
+            background-color: #2ea043;
+            transform: translateY(-2px);
+        }
+        .btn-contacto-directo svg {
+            width: 24px;
+            height: 24px;
+            fill: #fff;
+        }
+        .info-extra {
+            margin-top: 30px;
+            font-size: 0.95rem;
+            color: #8b949e;
+            border-top: 1px solid #30363d;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header style="margin-top: 20px;">
+    <div class="header-container">
+        <div class="romatek-banner">
+            <img src="romateklogo.jpeg" alt="Logo Romatek">
+        </div>
+        <div class="header-text">
+            <h1>ROMATEK</h1>
+            <p class="subtitulo-header">Servicio Técnico & Desarrollo Web</p>
+        </div>
+    </div>
+    <nav>
+        <a href="inicio.html">Inicio</a>
+        <a href="proyectos.html">Proyectos</a>
+        <a href="ayuda.html" style="color: #58a6ff;">Contacto</a>
+        <a href="admin.html" style="color: #d4af37;">Admin</a>
+    </nav>
+</header>
+
+<main>
+    <div class="contenido-contacto">
+        <h2>¿Hablamos sobre tu proyecto?</h2>
+        <p>¿Tenés una consulta de desarrollo web, necesitás un presupuesto o soporte técnico para tu PC? Escribime de forma directa y te respondo al instante.</p>
+        
+        <div class="caja-opciones-rapidas">
+            <!-- Botón directo a WhatsApp con mensaje predeterminado -->
+            <a href="https://wa.me/TU_NUMERO?text=Hola%20Romatek,%20quiero%20consultar%20sobre%20un%20servicio." target="_blank" class="btn-contacto-directo">
+                <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.395 0-.016 5.41-.019 12.06c0 2.125.556 4.201 1.613 6.028L0 24l6.033-1.582a11.85 11.85 0 006.012 1.625h.005c6.655 0 12.068-5.411 12.071-12.066a11.83 11.83 0 00-3.483-8.373z"/></svg>
+                Abrir Chat de WhatsApp
+            </a>
+        </div>
+
+        <div class="info-extra">
+            <p style="margin: 0;">También podés enviarme un correo electrónico o contactarme a través de mis redes oficiales.</p>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <img src="romateklogo.jpeg" alt="Logo Romatek" class="footer-logo">
+        <p>Desarrollado por <strong>Romatek</strong> - Servicio Técnico & Desarrollo Web</p>
+    </div>
+    <!-- Aviso de derechos reservados -->
+    <p style="margin-top: 10px; font-size: 0.9rem; color: #94a3b8;">&copy; 2026 Romatek. Todos los derechos reservados.</p>
+    
+    <!-- Espacio preparado para el contador de visitas -->
+    <div style="margin-top: 8px; font-size: 0.85rem; color: #38bdf8;">
+        <span>Visitas al sitio: <strong id="contador-visitas">Cargando...</strong></span>
+    </div>
+</footer>
+
+</body>
+</html>

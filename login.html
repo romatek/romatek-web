@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Admin - Romatek</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="header-container">
+        <div class="romatek-banner">
+            <img src="romateklogo.jpeg" alt="Logo Romatek">
+        </div>
+        <div class="header-text">
+            <h1>Panel Romatek</h1>
+            <p class="subtitulo-header">Acceso exclusivo para administración</p>
+        </div>
+    </div>
+    <nav>
+        <a href="inicio.html">Volver al Sitio</a>
+    </nav>
+</header>
+
+<main class="contenido">
+    <section class="form-ayuda" style="max-width: 450px;">
+        <h2 style="text-align: center; margin-bottom: 20px;">Iniciar Sesión</h2>
+        
+        <form id="login-form">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" required placeholder="tu@correo.com">
+
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" required placeholder="Tu contraseña de Firebase">
+
+            <button type="submit">Ingresar al Panel</button>
+        </form>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <img src="romateklogo.jpeg" alt="Logo Romatek" class="footer-logo">
+        <p>Desarrollado por <strong>Romatek</strong> - Servicio Técnico & Desarrollo Web</p>
+    </div>
+    <!-- Aviso de derechos reservados -->
+    <p style="margin-top: 10px; font-size: 0.9rem; color: #94a3b8;">&copy; 2026 Romatek. Todos los derechos reservados.</p>
+    
+    <!-- Espacio preparado para el contador de visitas -->
+    <div style="margin-top: 8px; font-size: 0.85rem; color: #38bdf8;">
+        <span>Visitas al sitio: <strong id="contador-visitas">Cargando...</strong></span>
+    </div>
+</footer>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB-v03-brm914a66_wXqcBS94YeOCoM1ao",
+        authDomain: "romatek-878f6.firebaseapp.com",
+        databaseURL: "https://romatek-878f6-default-rtdb.firebaseio.com",
+        projectId: "romatek-878f6",
+        storageBucket: "romatek-878f6.firebasestorage.app",
+        messagingSenderId: "1052240610748",
+        appId: "1:1052240610748:web:b0d2a916b47d8aa7fe17b9",
+        measurementId: "G-PTQW0WK854"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const loginForm = document.getElementById('login-form');
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then(() => {
+                alert("¡Acceso exitoso, bienvenido Román!");
+                window.location.href = "admin.html";
+            })
+            .catch((error) => {
+                alert("Error al iniciar sesión: Verificá tus datos.");
+                console.error(error);
+            });
+    });
+</script>
+
+</body>
+</html>

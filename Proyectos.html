@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyectos - Romatek</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .barra-admin-flotante {
+            background: #1f6feb;
+            color: white;
+            padding: 8px 20px;
+            text-align: right;
+            font-weight: bold;
+            display: none;
+            justify-content: flex-end;
+            gap: 20px;
+            align-items: center;
+            border-bottom: 2px solid #d4af37;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .barra-admin-flotante a { color: #ff7b72; text-decoration: none; }
+        
+        .modo-admin-activo [contenteditable="true"] {
+            border: 2px dashed #d4af37;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(212, 175, 55, 0.05);
+            outline: none;
+        }
+        .modo-admin-activo [contenteditable="true"]:hover {
+            border-color: #58a6ff;
+            background: rgba(88, 166, 255, 0.08);
+        }
+
+        .equipos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .equipo-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        #btn-flotante-guardar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #238636;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1001;
+        }
+        #btn-flotante-guardar:hover { background-color: #2ea043; }
+
+        .btn-agregar-panel {
+            background-color: #238636;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+            display: none;
+            transition: background 0.2s;
+        }
+        .btn-agregar-panel:hover { background-color: #2ea043; }
+
+        .btn-borrar-card {
+            background-color: #f85149;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
+        }
+        .modo-admin-activo .btn-borrar-card { display: inline-block; }
+
+        [data-firebase-key] {
+            opacity: 0;
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="barra-admin" class="barra-admin-flotante">
+    <span>🔓 Modo Administrador Activo</span>
+    <a href="inicio.html">Inicio</a>
+    <a href="proyectos.html">Proyectos</a>
+    <a href="ayuda.html">Contacto</a>
+    <a href="admin.html" style="color: #d4af37;">Panel Admin</a>
+    <a href="#" id="btn-logout">Cerrar Sesión</a>
+</div>
+
+<header style="margin-top: 35px;">
+    <div class="header-container">
+        <div class="romatek-banner">
+            <img src="romateklogo.jpeg" alt="Logo Romatek">
+        </div>
+        <div class="header-text">
+            <h1>ROMATEK</h1>
+            <p class="subtitulo-header">Servicio Técnico & Desarrollo Web</p>
+        </div>
+    </div>
+    <nav>
+        <a href="inicio.html">Inicio</a>
+        <a href="proyectos.html">Proyectos</a>
+        <a href="ayuda.html">Contacto</a>
+        <a href="admin.html" style="color: #d4af37;">Admin</a>
+    </nav>
+</header>
+
+<main class="contenido">
+    <section>
+        <h2 id="edit-titulo-proyectos" data-firebase-key="proyectosPagina/titulo">Cargando...</h2>
+        <p id="edit-bajada-proyectos" data-firebase-key="proyectosPagina/bajada">Cargando descripción...</p>
+    </section>
+
+    <section>
+        <div class="equipos-grid" id="grid-proyectos"></div>
+        <button id="btn-mas-proyecto" class="btn-agregar-panel">＋ Agregar Nuevo Panel de Proyecto</button>
+    </section>
+</main>
+
+<button id="btn-flotante-guardar">💾 Guardar Cambios en Textos</button>
+
+<footer>
+    <div class="footer-content">
+        <img src="romateklogo.jpeg" alt="Logo Romatek" class="footer-logo">
+        <p>Desarrollado por <strong>Romatek</strong> - Servicio Técnico & Desarrollo Web</p>
+    </div>
+    <!-- Aviso de derechos reservados -->
+    <p style="margin-top: 10px; font-size: 0.9rem; color: #94a3b8;">&copy; 2026 Romatek. Todos los derechos reservados.</p>
+    
+    <!-- Espacio preparado para el contador de visitas -->
+    <div style="margin-top: 8px; font-size: 0.85rem; color: #38bdf8;">
+        <span>Visitas al sitio: <strong id="contador-visitas">Cargando...</strong></span>
+    </div>
+</footer>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getDatabase, ref, onValue, set, push, remove, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB-v03-brm914a66_wXqcBS94YeOCoM1ao",
+        authDomain: "romatek-878f6.firebaseapp.com",
+        databaseURL: "https://romatek-878f6-default-rtdb.firebaseio.com",
+        projectId: "romatek-878f6",
+        storageBucket: "romatek-878f6.firebasestorage.app",
+        messagingSenderId: "1052240610748",
+        appId: "1:1052240610748:web:b0d2a916b47d8aa7fe17b9",
+        measurementId: "G-PTQW0WK854"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const textosEditables = document.querySelectorAll('[data-firebase-key]');
+
+    textosEditables.forEach(el => {
+        const key = el.getAttribute('data-firebase-key');
+        onValue(ref(db, key), (snap) => {
+            if (snap.val()) el.innerText = snap.val();
+        });
+    });
+
+    onAuthStateChanged(auth, (user) => {
+        const btnMas = document.getElementById('btn-mas-proyecto');
+        const barraAdmin = document.getElementById('barra-admin');
+        const btnGuardar = document.getElementById('btn-flotante-guardar');
+
+        if (user) {
+            barraAdmin.style.display = 'flex';
+            document.body.classList.add('modo-admin-activo');
+            btnGuardar.style.display = 'block';
+            if(btnMas) btnMas.style.display = 'block';
+            textosEditables.forEach(el => el.setAttribute('contenteditable', 'true'));
+        } else {
+            barraAdmin.style.display = 'none';
+            document.body.classList.remove('modo-admin-activo');
+            btnGuardar.style.display = 'none';
+            if(btnMas) btnMas.style.display = 'none';
+            textosEditables.forEach(el => el.removeAttribute('contenteditable'));
+        }
+    });
+
+    document.getElementById('btn-logout').addEventListener('click', (e) => {
+        e.preventDefault();
+        signOut(auth).then(() => { window.location.reload(); });
+    });
+
+    document.getElementById('btn-flotante-guardar').addEventListener('click', () => {
+        const promesas = [];
+        textosEditables.forEach(el => {
+            const key = el.getAttribute('data-firebase-key');
+            promesas.push(set(ref(db, key), el.innerText));
+        });
+
+        Promise.all(promesas).then(() => {
+            alert("¡Cambios guardados correctamente en Firebase!");
+        }).catch(err => {
+            alert("Error al guardar: " + err.message);
+        });
+    });
+
+    const grid = document.getElementById('grid-proyectos');
+
+    onValue(ref(db, 'proyectosTarjetas'), (snapshot) => {
+        grid.innerHTML = "";
+        const data = snapshot.val();
+        const esAdmin = auth.currentUser !== null;
+
+        if (!data) {
+            grid.innerHTML = "<p style='color: #8b949e; text-align: center; grid-column: 1/-1;'>No hay proyectos cargados todavía.</p>";
+            return;
+        }
+
+        Object.keys(data).forEach(id => {
+            const proj = data[id];
+            const card = document.createElement('div');
+            card.className = 'equipo-card';
+            const editAttr = esAdmin ? 'contenteditable="true"' : '';
+            const enlaceVal = proj.enlace || '#';
+            const textoBotonVal = proj.textoBoton || 'Ver Proyecto';
+
+            card.innerHTML = `
+                <div>
+                    <img src="${proj.imagen}" alt="Portada" style="width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 10px;">
+                    ${esAdmin ? `<div style="margin-bottom:10px;"><label style="font-size:0.75rem; color:#d4af37; display:block; margin-bottom:2px; font-weight:bold;">Subir imagen de portada:</label><input type="file" accept="image/*" class="input-cambiar-img" data-id="${id}" style="width:100%; background:#0d1117; color:#fff; border:1px solid #30363d; padding:4px; font-size:0.8rem; cursor:pointer;"></div>` : ''}
+                    
+                    <h3 ${editAttr} class="card-titulo" data-id="${id}" style="color: #58a6ff; margin-bottom: 6px;">${proj.titulo}</h3>
+                    <p ${editAttr} class="card-tecno" data-id="${id}" style="font-size: 0.8rem; color: #8b949e; margin-bottom: 6px;">${proj.tecnologias}</p>
+                    <p ${editAttr} class="card-desc" data-id="${id}" style="font-size: 0.9rem; line-height: 1.4; margin-bottom: 15px;">${proj.descripcion}</p>
+                </div>
+                <div>
+                    <a href="${enlaceVal}" target="_blank" style="display:inline-block; background:#238636; color:#fff; padding:8px 12px; border-radius:4px; text-decoration:none; font-weight:bold; font-size:0.9rem; margin-bottom:8px;">${textoBotonVal}</a>
+                    ${esAdmin ? `<br><input type="text" value="${enlaceVal}" class="input-cambiar-enlace" data-id="${id}" style="width:100%; margin-bottom:4px; background:#0d1117; color:#fff; border:1px solid #30363d; padding:4px; font-size:0.8rem;" placeholder="Enlace URL">` : ''}
+                    ${esAdmin ? `<input type="text" value="${textoBotonVal}" class="input-cambiar-texto-boton" data-id="${id}" style="width:100%; margin-bottom:8px; background:#0d1117; color:#fff; border:1px solid #30363d; padding:4px; font-size:0.8rem;" placeholder="Texto del botón">` : ''}
+                    
+                    <br><button class="btn-borrar-card" data-id="${id}">Eliminar Panel</button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        if (esAdmin) {
+            document.querySelectorAll('.card-titulo, .card-tecno, .card-desc').forEach(el => {
+                el.addEventListener('blur', (e) => {
+                    const id = e.target.getAttribute('data-id');
+                    const field = e.target.classList.contains('card-titulo') ? 'titulo' : e.target.classList.contains('card-tecno') ? 'tecnologias' : 'descripcion';
+                    update(ref(db, 'proyectosTarjetas/' + id), { [field]: e.target.innerText });
+                });
+            });
+
+            document.querySelectorAll('.input-cambiar-img').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(uploadEvent) {
+                            const base64Image = uploadEvent.target.result;
+                            const id = e.target.getAttribute('data-id');
+                            update(ref(db, 'proyectosTarjetas/' + id), { imagen: base64Image }).then(() => {
+                                alert("¡Imagen actualizada con éxito!");
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.input-cambiar-enlace, .input-cambiar-texto-boton').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const id = e.target.getAttribute('data-id');
+                    let field = 'enlace';
+                    if(e.target.classList.contains('input-cambiar-texto-boton')) field = 'textoBoton';
+                    update(ref(db, 'proyectosTarjetas/' + id), { [field]: e.target.value });
+                });
+            });
+
+            document.querySelectorAll('.btn-borrar-card').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.getAttribute('data-id');
+                    if(confirm("¿Eliminar este panel de proyecto?")) {
+                        remove(ref(db, 'proyectosTarjetas/' + id));
+                    }
+                });
+            });
+        }
+    });
+
+    document.getElementById('btn-mas-proyecto').addEventListener('click', () => {
+        push(ref(db, 'proyectosTarjetas'), {
+            titulo: "Nuevo Proyecto",
+            tecnologias: "Tecnologías utilizadas",
+            descripcion: "Escribe aquí la descripción de tu proyecto...",
+            imagen: "romateklogo.jpeg",
+            enlace: "#",
+            textoBoton: "Ver Proyecto"
+        }).then(() => {
+            alert("¡Nuevo panel agregado con éxito!");
+        }).catch(err => {
+            alert("Error al agregar: " + err.message);
+        });
+    });
+</script>
+
+</body>
+</html>

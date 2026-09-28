@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración - Romatek</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="header-container">
+        <div class="romatek-banner">
+            <img src="romateklogo.jpeg" alt="Logo Romatek">
+        </div>
+        <div class="header-text">
+            <h1>Panel de Administración</h1>
+            <p class="subtitulo-header">Gestión y Control - Romatek</p>
+        </div>
+    </div>
+    <nav>
+        <a href="inicio.html">Ver Sitio Web</a>
+        <a href="proyectos.html">Ir a Proyectos</a>
+        <a href="#" id="btn-logout" style="color: #f85149;">Cerrar Sesión</a>
+    </nav>
+</header>
+
+<main class="contenido">
+    <section>
+        <h2>Gestión de Proyectos Actuales</h2>
+        <p style="color: #8b949e; margin-bottom: 20px;">Desde aquí podés supervisar o eliminar los paneles de proyectos publicados. Recordá que también podés agregarlos o editarlos directamente en la sección de proyectos con la sesión iniciada.</p>
+        <div id="lista-admin-proyectos">
+            <p style="color: #8b949e;">Cargando proyectos...</p>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <img src="romateklogo.jpeg" alt="Logo Romatek" class="footer-logo">
+        <p>Desarrollado por <strong>Romatek</strong> - Servicio Técnico & Desarrollo Web</p>
+    </div>
+    <!-- Aviso de derechos reservados -->
+    <p style="margin-top: 10px; font-size: 0.9rem; color: #94a3b8;">&copy; 2026 Romatek. Todos los derechos reservados.</p>
+    
+    <!-- Espacio preparado para el contador de visitas -->
+    <div style="margin-top: 8px; font-size: 0.85rem; color: #38bdf8;">
+        <span>Visitas al sitio: <strong id="contador-visitas">Cargando...</strong></span>
+    </div>
+</footer>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB-v03-brm914a66_wXqcBS94YeOCoM1ao",
+        authDomain: "romatek-878f6.firebaseapp.com",
+        databaseURL: "https://romatek-878f6-default-rtdb.firebaseio.com",
+        projectId: "romatek-878f6",
+        storageBucket: "romatek-878f6.firebasestorage.app",
+        messagingSenderId: "1052240610748",
+        appId: "1:1052240610748:web:b0d2a916b47d8aa7fe17b9",
+        measurementId: "G-PTQW0WK854"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            window.location.href = "login.html";
+        }
+    });
+
+    document.getElementById('btn-logout').addEventListener('click', (e) => {
+        e.preventDefault();
+        signOut(auth).then(() => {
+            window.location.href = "login.html";
+        });
+    });
+
+    const listaAdmin = document.getElementById('lista-admin-proyectos');
+    const proyectosRef = ref(db, 'proyectosTarjetas');
+
+    onValue(proyectosRef, (snapshot) => {
+        listaAdmin.innerHTML = "";
+        const data = snapshot.val();
+        if (!data) {
+            listaAdmin.innerHTML = "<p style='color: #8b949e;'>No hay proyectos cargados todavía.</p>";
+            return;
+        }
+
+        Object.keys(data).forEach((id) => {
+            const proj = data[id];
+            const div = document.createElement('div');
+            div.style.cssText = "background: #21262d; border: 1px solid #30363d; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;";
+            
+            div.innerHTML = `
+                <div style="display: flex; gap: 15px; align-items: center; flex: 1; min-width: 250px;">
+                    <img src="${proj.imagen}" alt="Portada" style="width: 70px; height: 70px; object-fit: cover; border-radius: 6px;">
+                    <div>
+                        <h3 style="color: #58a6ff; margin-bottom: 5px;">${proj.titulo}</h3>
+                        <p style="font-size: 0.9rem; color: #8b949e; margin-bottom: 5px;"><strong>Tecnologías:</strong> ${proj.tecnologias}</p>
+                        <p style="font-size: 0.95rem; color: #c9d1d9;">${proj.descripcion}</p>
+                    </div>
+                </div>
+                <button data-id="${id}" class="btn-eliminar" style="background-color: #f85149; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; height: fit-content;">Eliminar Panel</button>
+            `;
+            listaAdmin.appendChild(div);
+        });
+
+        document.querySelectorAll('.btn-eliminar').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const idProj = e.target.getAttribute('data-id');
+                if (confirm("¿Estás seguro de que querés eliminar este panel de proyecto?")) {
+                    remove(ref(db, 'proyectosTarjetas/' + idProj)).then(() => {
+                        alert("Panel eliminado correctamente.");
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,265 @@
+/* ==========================================
+ESTILOS GENERALES - ROMATEK
+========================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0d1117;
+    color: #e6edf3;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ==========================================
+ENCABEZADO Y LOGO CENTRADO ARRIBA
+========================================== */
+
+header {
+    background: linear-gradient(135deg, #161b22, #1f6feb);
+    padding: 25px 30px;
+    border-bottom: 2px solid #30363d;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    max-width: 1000px;
+    margin: 0 auto 15px auto;
+    text-align: left;
+}
+
+.romatek-banner {
+    text-align: center;
+}
+
+.romatek-banner img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    border: 3px solid #d4af37;
+    animation: flotarMoneda 4s infinite ease-in-out;
+    box-shadow: 0 0 15px rgba(31, 111, 235, 0.4), 0 0 8px rgba(212, 175, 55, 0.5);
+    image-rendering: -webkit-optimize-contrast;
+    transition: transform 0.3s ease;
+}
+
+.romatek-banner img:hover {
+    transform: scale(1.06);
+}
+
+.header-text {
+    text-align: left;
+}
+
+header h1 {
+    font-size: 2.2rem;
+    color: #ffffff;
+    letter-spacing: 2px;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+
+.subtitulo-header {
+    font-size: 1rem;
+    color: #8b949e;
+    margin-bottom: 0;
+}
+
+nav {
+    text-align: center;
+    margin-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px;
+}
+
+nav a {
+    color: #c9d1d9;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+    padding-bottom: 5px;
+}
+
+nav a:hover {
+    color: #58a6ff;
+    border-bottom: 2px solid #58a6ff;
+}
+
+@keyframes flotarMoneda {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-4px) scale(1.02); }
+}
+
+/* ==========================================
+CONTENIDO PRINCIPAL
+========================================== */
+
+.contenido {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+    flex: 1;
+}
+
+section {
+    background: #161b22;
+    padding: 30px;
+    margin-bottom: 30px;
+    border-radius: 12px;
+    border: 1px solid #30363d;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+section:hover {
+    transform: translateY(-3px);
+    border-color: #1f6feb;
+}
+
+section h2 {
+    color: #58a6ff;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+    border-left: 4px solid #d4af37;
+    padding-left: 10px;
+}
+
+section p {
+    margin-bottom: 15px;
+    color: #c9d1d9;
+    font-size: 1.1rem;
+}
+
+/* ==========================================
+FORMULARIO DE CONTACTO Y ADMIN
+========================================== */
+
+.form-ayuda {
+    max-width: 650px;
+    margin: 40px auto;
+    background: #161b22;
+    padding: 35px;
+    border-radius: 12px;
+    border: 1px solid #30363d;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.form-ayuda label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #e6edf3;
+}
+
+.form-ayuda input,
+.form-ayuda textarea,
+.form-ayuda select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-ayuda input:focus,
+.form-ayuda textarea:focus,
+.form-ayuda select:focus {
+    border-color: #58a6ff;
+    outline: none;
+}
+
+.form-ayuda textarea {
+    resize: vertical;
+    min-height: 130px;
+}
+
+.form-ayuda button {
+    background-color: #1f6feb;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.form-ayuda button:hover {
+    background-color: #388bfd;
+}
+
+/* ==========================================
+PIE DE PÁGINA (FOOTER)
+========================================== */
+
+footer {
+    background-color: #161b22;
+    text-align: center;
+    padding: 30px 20px;
+    border-top: 2px solid #30363d;
+    margin-top: auto;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.footer-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #d4af37;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+}
+
+footer p {
+    color: #8b949e;
+    font-size: 0.95rem;
+}
+
+footer p strong {
+    color: #58a6ff;
+}
+
+@media (max-width: 600px) {
+    .header-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    .header-text {
+        text-align: center;
+    }
+    header h1 {
+        font-size: 1.8rem;
+    }
+    nav a {
+        display: inline-block;
+        margin: 5px 10px;
+    }
+}
